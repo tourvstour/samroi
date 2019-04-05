@@ -124,16 +124,21 @@ class question extends Component {
       datas
     })
   }
+
   render() {
     return (
       <div >
-       
         <Table columns={this.state.columns} dataSource={this.state.dataSource} pagination={false}></Table>
+        <Button style={{ backgroundColor: "#00ffff" }}>บันทึก</Button>
+        <Button style={{ backgroundColor: "#ff6600", color: "#ffffff" }}>ยกเลิก</Button>
       </div>
     );
   }
 }
-const test = state => {
-  return { datas: state.num }
+const Score = state => {
+  return {
+    score: state.score.map(a => a.values)
+  }
 }
-export default connect(test)(question);
+
+export default connect(Score)(question);

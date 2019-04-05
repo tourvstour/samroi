@@ -1,12 +1,13 @@
 const storName = {
-    score: []
+    score: [],
+    person: []
 }
 
 const reducers = (state = storName, action) => {
     switch (action.type) {
         case "ADD":
-            let input = '';
-            if (state.score.length === "0") {
+            let input = 'null';
+            if (state.score.length === 0) {
                 input = "insert_f"
             }
             else {
@@ -32,7 +33,6 @@ const reducers = (state = storName, action) => {
                     else if (numStore !== numAdd && listStore !== listAdd) {
                         input = "insert_l"
                     }
-
                 })
             }
 
@@ -54,7 +54,17 @@ const reducers = (state = storName, action) => {
                     })
                 })
             }
+            break;
+        case "Clear":
+            return Object.assign({}, state, {
+                person: []
+            })
+        case "Person":
+            return Object.assign({}, state, {
+                person: state.person.concat([action.datas])
+            })
 
+            break;
         default:
             return state
     }
