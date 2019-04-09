@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Radio, Button, Icon, Row, Col, Table } from 'antd'
+import { message, Radio, Button, Icon, Row, Col, Table } from 'antd'
 import { connect } from 'react-redux'
 import Person from './Person'
 const RadioGroup = Radio.Group;
@@ -26,7 +26,6 @@ class question extends Component {
           <Radio style={radioStyle} value={1}>1 คะแนน</Radio>
           <Radio style={radioStyle} value={2}>2 คะแนน</Radio>
         </RadioGroup>
-
       }, {
         title: 'sub_list_2',
         dataIndex: '',
@@ -125,11 +124,41 @@ class question extends Component {
     })
   }
 
+  Save = () => {
+    let person = this.props.person,
+      data = this.props.scoreValue,
+      lengthData = this.props.scoreValue.length,
+      lengthNum = this.state.dataSource.length,
+      countNum = lengthNum * 5
+
+    if (lengthData < countNum) {
+      message.warning("ระบุคะแนนไม่ครบ")
+    } else {
+      fetch("http://192.168.101.240:6061/api/save.php", {
+        method: "POST",
+        body: JSON.stringify({
+          person: person,
+          data: data
+        })
+      })
+        .then(res => res.json())
+        .then(res => {
+          let stat = res.stat
+          console.log(stat)
+          if (stat === "200") {
+            message.success("บันทึกข้อมูลทำเสร็จ")
+          }
+          else {
+            message.error("ไม่สามารถบันทึกซ้ำได้")
+          }
+        })
+    }
+  }
   render() {
     return (
       <div >
         <Table columns={this.state.columns} dataSource={this.state.dataSource} pagination={false}></Table>
-        <Button style={{ backgroundColor: "#00ffff" }}>บันทึก</Button>
+        <Button style={{ backgroundColor: "#00ffff" }} onClick={this.Save}>บันทึก</Button>
         <Button style={{ backgroundColor: "#ff6600", color: "#ffffff" }}>ยกเลิก</Button>
       </div>
     );
@@ -137,7 +166,9 @@ class question extends Component {
 }
 const Score = state => {
   return {
-    score: state.score.map(a => a.values)
+    score: state.score.map(a => a.values),
+    person: state.person,
+    scoreValue: state.score
   }
 }
 

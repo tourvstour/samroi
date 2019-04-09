@@ -1,6 +1,7 @@
 const storName = {
     score: [],
-    person: []
+    person: [],
+    pageNumber: ""
 }
 
 const reducers = (state = storName, action) => {
@@ -40,7 +41,7 @@ const reducers = (state = storName, action) => {
             console.log("msg==>", mess)
             if (mess === "insert_f" || mess === "insert_s" || mess === "insert_l") {
                 return Object.assign({}, state, {
-                    score: state.score.concat([action.datas])
+                    score: state.score.concat(action.datas)
                 })
             }
             else if (mess === "update") {
@@ -61,10 +62,18 @@ const reducers = (state = storName, action) => {
             })
         case "Person":
             return Object.assign({}, state, {
-                person: state.person.concat([action.datas])
+                person: state.person.concat(action.datas)
             })
 
             break;
+        case "ClearPage":
+            return Object.assign({}, state, {
+                pageNumber: ""
+            })
+        case "Page":
+            return Object.assign({}, state, {
+                pageNumber: state.pageNumber.concat(action.datas)
+            })
         default:
             return state
     }

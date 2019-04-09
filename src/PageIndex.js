@@ -5,7 +5,7 @@ class PageIndex extends Component {
         return (<div>
             <Row gutter={8} type="flex" justify="center" align="middle" >
                 <Col lg={{ span: "8" }}>
-                    <Card onClick={() => window.location.href = "/person"}>
+                    <Card onClick={() => window.location.href = "/main"}>
                         <a><h2>ทำแบบประเมิน</h2></a>
                     </Card>
                 </Col>

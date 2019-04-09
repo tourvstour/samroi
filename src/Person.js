@@ -5,14 +5,15 @@ class Person extends Component {
     constructor() {
         super()
         this.state = {
-            person: []
+            person: [],
+            ButtonState: "true"
         }
     }
     Search = () => {
         //console.log(e.target.value)
         let hn = document.getElementById('hn').value,
             type = "Enter"
-        fetch("http://192.168.101.240:6068/web_api/visit_number.php", {
+        fetch("http://192.168.101.240:6061/api/visit_number.php", {
             method: "POST",
             body: JSON.stringify({
                 type: type,
@@ -27,6 +28,9 @@ class Person extends Component {
             })
     }
     Confirm = () => {
+        this.setState({
+            ButtonState: ""
+        })
         this.props.dispatch({
             type: "Clear"
         })
@@ -34,9 +38,16 @@ class Person extends Component {
             type: "Person",
             datas: this.state.person
         })
+
     }
     Next = () => {
-        window.location.href = "/question"
+        this.props.dispatch({
+            type: "ClearPage"
+        })
+        this.props.dispatch({
+            type: "Page",
+            datas: "question"
+        })
     }
     render() {
         return (
@@ -48,7 +59,7 @@ class Person extends Component {
                     <Col md={{ span: 4 }}>
                         <Input placeholder={"HN"} id="hn" />
                     </Col>
-                    <Button onClick={this.Search}><Icon type="search" />search</Button>
+                    <Button onClick={this.Search}><Icon type="search" />Search</Button>
                 </Row>
                 <Card>
                     {this.state.person.map(a => (
@@ -60,11 +71,10 @@ class Person extends Component {
                                 ชื่อ-สกุล: {a.patient_prefix_description} {a.patient_firstname} {a.patient_lastname}
                             </h3>
                             <h3> อายุ: {a.age}</h3>
-                            <Button onClick={this.Confirm}>Confirm</Button>
-                            <Button onClick={this.Next}>Next</Button>
+                            <Button onClick={this.Confirm} >Confirm</Button>
+                            <Button onClick={this.Next} disabled={this.state.ButtonState}>Next</Button>
                         </ul>
                     ))}
-
                 </Card>
             </div>
         )
