@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import Question from './question';
 import Person from './Person'
+import Headers from './Headers'
 import { connect } from 'react-redux';
-import { Button } from 'antd';
+import { Row, Card, Col } from 'antd';
 
 class Main extends Component {
     constructor() {
@@ -22,13 +23,22 @@ class Main extends Component {
         if (this.props.page === "") {
             return (
                 <div>
-                    <Person />
+                    <Headers />
+                    <br />
+                    <Row type="flex" justify="center" >
+                        <Col lg={{ span: "18" }}>
+                            <Person />
+                        </Col>
+                    </Row>
+
                 </div>
             )
         }
         else if (this.props.page === "question") {
             return (
                 <div>
+                    <Headers />
+                    <br />
                     <Question />
                 </div>
             )

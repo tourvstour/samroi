@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { message, Radio, Button, Icon, Row, Col, Table } from 'antd'
+import { message, Radio, Button, Popconfirm, Row, Col, Table, Card } from 'antd'
 import { connect } from 'react-redux'
 import Person from './Person'
 const RadioGroup = Radio.Group;
@@ -144,9 +144,14 @@ class question extends Component {
         .then(res => res.json())
         .then(res => {
           let stat = res.stat
-          console.log(stat)
+          //console.log(stat)
           if (stat === "200") {
+            let date = this.props.person.map(a => a.datenow),
+              hn = this.props.person.map(a => a.patient_hn)
             message.success("บันทึกข้อมูลทำเสร็จ")
+              .then(function name() {
+                window.location.href = `/sum?date=${date}/hn=${hn}`
+              })
           }
           else {
             message.error("ไม่สามารถบันทึกซ้ำได้")
@@ -154,13 +159,23 @@ class question extends Component {
         })
     }
   }
+  Cancel = () => {
+    window.location.href = "/"
+  }
   render() {
     return (
-      <div >
-        <Table columns={this.state.columns} dataSource={this.state.dataSource} pagination={false}></Table>
-        <Button style={{ backgroundColor: "#00ffff" }} onClick={this.Save}>บันทึก</Button>
-        <Button style={{ backgroundColor: "#ff6600", color: "#ffffff" }}>ยกเลิก</Button>
-      </div>
+      <Col lg={{ span: 24 }}>
+        <Row type="" justify="space-between" >
+          <Card style={{ textAlign: "center", borderRadius: "10px" }}>
+            <Table columns={this.state.columns} dataSource={this.state.dataSource} pagination={false} ></Table>
+            <br />
+            <Button style={{ backgroundColor: "#00ffff" }} onClick={this.Save} >บันทึก</Button>
+            <Popconfirm title="Are you sure？" okText="Yes" cancelText="No" onConfirm={this.Cancel}>
+              <Button style={{ backgroundColor: "#ff6600", color: "#ffffff" }} >ยกเลิก</Button>
+            </Popconfirm>
+          </Card>
+        </Row>
+      </Col>
     );
   }
 }

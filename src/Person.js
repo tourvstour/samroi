@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Input, Button, Icon, Row, Col, Card } from 'antd';
+import { Input, Button, Icon, Row, Col, Card, message } from 'antd';
 class Person extends Component {
     constructor() {
         super()
@@ -28,17 +28,21 @@ class Person extends Component {
             })
     }
     Confirm = () => {
-        this.setState({
-            ButtonState: ""
-        })
-        this.props.dispatch({
-            type: "Clear"
-        })
-        this.props.dispatch({
-            type: "Person",
-            datas: this.state.person
-        })
-
+        let data = this.state.person.map(a => a.patient_firstname).toString()
+        if (data === "noData") {
+            message.warning("ไม่พบข้อมูล")
+        } else {
+            this.setState({
+                ButtonState: ""
+            })
+            this.props.dispatch({
+                type: "Clear"
+            })
+            this.props.dispatch({
+                type: "Person",
+                datas: this.state.person
+            })
+        }
     }
     Next = () => {
         this.props.dispatch({
@@ -52,18 +56,19 @@ class Person extends Component {
     render() {
         return (
             <div>
-                <Row gutter={8}>
-                    <Col md={{ span: 3 }}>
-                        ค้นหาผู้ป่วย:
-                </Col>
-                    <Col md={{ span: 4 }}>
-                        <Input placeholder={"HN"} id="hn" />
-                    </Col>
-                    <Button onClick={this.Search}><Icon type="search" />Search</Button>
-                </Row>
-                <Card>
+                <Card style={{ borderRadius: "10px" }}>
+                    <Row gutter={8} type="flex" justify="center" >
+                        <Col md={{ span: 3 }}>
+                            ค้นหาผู้ป่วย:
+                        </Col>
+                        <Col md={{ span: 4 }}>
+                            <Input placeholder={"HN"} id="hn" />
+                        </Col>
+                        <Button onClick={this.Search}><Icon type="search" />Search</Button>
+                    </Row>
+                    <hr />
                     {this.state.person.map(a => (
-                        <ul>
+                        <ul >
                             <h3>
                                 HN: {a.patient_hn}
                             </h3>
@@ -71,11 +76,14 @@ class Person extends Component {
                                 ชื่อ-สกุล: {a.patient_prefix_description} {a.patient_firstname} {a.patient_lastname}
                             </h3>
                             <h3> อายุ: {a.age}</h3>
-                            <Button onClick={this.Confirm} >Confirm</Button>
-                            <Button onClick={this.Next} disabled={this.state.ButtonState}>Next</Button>
+                            <div style={{ textAlign: "center" }}>
+                                <Button onClick={this.Confirm} type="primary" >Confirm</Button>{" "}
+                                <Button onClick={this.Next} hidden={this.state.ButtonState}>Next<Icon type="right" /></Button>
+                            </div>
                         </ul>
                     ))}
                 </Card>
+
             </div>
         )
     }
